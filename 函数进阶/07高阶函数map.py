@@ -5,7 +5,7 @@
 # map函数：对一组数据中的每一个元素，统一执行某种操作（加工），并生成一组新数据。
 # 简单理解：对数据中的每一个元素统一加工产出一组新的数据
 # 功能是：将列表中的元素作为函数的实参传入到 自定义函数中，然后再返回，总返回值是一个迭代器对象
-# 语法定义：map(操作函数，序列)
+# 语法定义：map(function(a)，序列) -> 返回结果为：迭代对象
 list1 = [1, 2, 3, 4, 5]
 
 
@@ -15,6 +15,12 @@ def func(item):
     print(f'item={item}')
     return item ** 3  # 3次方
 
+
+# map 原貌实现
+new_list = []  # 生产结果
+for item in list1:
+    new_list.append(func(item))
+print(f'==========new_list:{new_list} ')
 
 result = map(func, list1)  # 返回值为迭代器对象 type: class map,与dict不是一样东西，
 print(f'type:{type(result)} , value:{result}l')  # map object at 内存值
