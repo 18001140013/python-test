@@ -17,6 +17,7 @@ def login_comment(func):
 
 # 装饰器标记，将login_comment函数扩展给comment2
 @login_comment
+# 这里的@login_comment 等价于  lc = login_comment(comment2)
 def comment2():
     print('=======评论')
 
