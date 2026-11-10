@@ -6,6 +6,7 @@
 # 2 如果从未有过账号录入，则需要录入账号与密码
 # 3 一条账号与密码为一条字符串信息存放于本地文件中
 import os.path
+from functools import wraps
 
 
 # 定义代参数的装饰器函数
@@ -46,6 +47,7 @@ def login(user_path):
         # 三层：内部函数
         # ===================注意：三层函数代码在 test() 函数调用后才会执行
         # 定义处：`*` `**` 是打包：把进来的参数打包成元组、字典
+        @wraps(func) # 这里包装伪装一下，外部函数调用时名字就是自己的了，不然会是inner,不好排查
         def inner(*args, **kwargs):  # 万能参数，适配任意函数
             print("====调用前日志====")
             print(f"位置参数 args：{args}")
@@ -87,6 +89,7 @@ def test(a, b, c):
 # 测试代码
 if __name__ == '__main__':
     print('代码测试开始====== 》')
+    print(f'看一下函数名：{test.__name__}') # @wraps 包装伪装后 名字就成test了
     print(f'test1函数测试：{test(1, b=2, c=3)}')
     print(f'test2函数测试：{test(4, 5, 6)}')
     print(f'test3函数测试：{test(7, 8, 9)}')
