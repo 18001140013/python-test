@@ -5,20 +5,6 @@ from multiprocessing import Process
 import time
 
 
-# 吃饭任务
-def eating():
-    for i in range(5):
-        print('吃饭.....')
-        time.sleep(1)  # 休眠1秒
-
-
-# 工作学习任务
-def working():
-    for i in range(5):
-        print('学习.....')
-        time.sleep(1)  # 休眠1秒
-
-
 # 测试代码
 if __name__ == '__main__':
     p1 = Process(target=eating, name='eating进程')
