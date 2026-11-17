@@ -17,11 +17,11 @@ from threading import Thread
 async def func1(name):
     for i in range(6):
         print(f'{name}{i}')
-        await asyncio.sleep(1)  # 协程函数：休眠1s
-        # time.sleep(1)
+        await asyncio.sleep(1)  # 协程函数：休眠1s，如果不休眠会一直占用线程资源，直到结束
+        # time.sleep(1)  # 如果用time下的，会让线程休眠1s,提升了级别
 
 
-#  定义一个协程入口 【多协程任务串行测试】：
+#  【1】定义一个协程入口 【多协程任务串行测试】：
 async def main_coroutine():
     await func1('liSi')  # 启动一个协程用await 不然会报错，挂起一个协程就是启动一个协程，等待执行完毕后执行下面
     print(f'main_coro=====liSi 结束')
@@ -29,14 +29,14 @@ async def main_coroutine():
     print(f'main_coro=====zhangSan 结束')
 
 
-#  定义一个协程入口 【多协程并行测试】：
+#  【2】定义一个协程入口 【多协程并行测试 方法1】：
 async def main_coroutine_gather():
     print(f'main_coro_gather===== 开始')
-    await asyncio.gather(func1('liSi'), func1('zhangSan'))  # 聚集,并发执行任务，并行
+    await asyncio.gather(func1('liSi'), func1('zhangSan'))  # 聚集,并发执行多任务，伪并行，需要等待多任务全部执行完
     print(f'main_coro_gather===== 结束')
 
 
-# 多任务通过多线程执行【多线程并发测试】
+# 【3】多任务通过多线程执行【多线程并发测试】
 def main_thread():
     def funcTest(name):
         for i in range(6):
@@ -51,6 +51,23 @@ def main_thread():
     t2.join()
 
 
+#  【4】定义一个协程入口 【多协程并行测试 方法2】：
+async def main_coroutine_create_task():
+    print(f'main_coro_create_task===== 开始')
+    task1 = asyncio.create_task(func1('liSi'))  # task1类型: # class '_asyncio.Task'，执行到 sleep()方法后会让出时间片
+    task2 = asyncio.create_task(func1('zhangSan'))
+
+    # 启动一个异步 方法1
+    await task1  # 异步1
+    await task2  # 异步2
+
+    # 启动一个异步 方法2
+    # await asyncio.gather(task1, task2)
+
+    # 总结 2个异步任务同时执行，一个在sleep时另一个执行 不断切换执行达到并行效果
+    print(f'main_coro_create_task===== 结束')
+
+
 # 测试代码
 # await 协程，真正执行
 if __name__ == '__main__':
@@ -61,10 +78,10 @@ if __name__ == '__main__':
     print(f'查看协程对象类型:{type(coro)}')  # class：coroutine
     coro.close()  # 不需要执行就手动关闭
 
-    # asyncio.run(main_coroutine())  # 启动一个串行协程 12s
-    # asyncio.run(main_coroutine_gather())  # 启动一个并行协程 6s
-    main_thread()  # 启动一个并发线程 6s
-
+    # asyncio.run(main_coroutine())  # 【1】 启动一个协程串行 12s
+    # asyncio.run(main_coroutine_gather())  # 【2】启动一个协程并行 gather方法 6s
+    # main_thread()  # 【3】启动一个并发任务-线程 6s
+    asyncio.run(main_coroutine_create_task())  # 【4】启动一个异步任务  create_task方法
     print(f'=======结束{time.time() - s_time}')
 
 # 总结：多任务并发，协程执行时间<线程执行时间
