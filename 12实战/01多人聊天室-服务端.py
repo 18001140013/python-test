@@ -49,7 +49,9 @@ class MyServiceFrame(wx.Frame):
 
     # 保存日志
     def func_save_log_click(self, event):
-        pass
+        data = self.text.GetValue().strip()
+        with open(f'log-{time.strftime('%Y-%m-%d-%H-%M-%S')}.txt', 'a+', encoding='utf-8') as f:
+            f.writelines(data)
 
     # 停止服务
     def func_stop_service_click(self, event):

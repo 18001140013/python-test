@@ -56,6 +56,7 @@ class MyClientFrame(wx.Frame):
         self.Bind(event=EVT_BUTTON, handler=self.func_connect_service_click, source=connect_service_button)
         self.Bind(event=EVT_BUTTON, handler=self.func_leave_service_click, source=leave_service_button)
         self.Bind(event=EVT_BUTTON, handler=self.func_send_button_click, source=send_button)
+        self.Bind(event=EVT_BUTTON, handler=self.func_clear_button_click, source=clear_button)
 
     # 连接服务
     def func_connect_service_click(self, event):
@@ -74,6 +75,10 @@ class MyClientFrame(wx.Frame):
 
         except ConnectionRefusedError:  # [Errno 61]  表示服务端服务没有启动
             print('表示服务端服务没有启动!')
+
+    # 重置发送内容
+    def func_clear_button_click(self, event):
+        self.send_content.SetValue('')
 
     # 退出socket
     def func_leave_service_click(self, event):

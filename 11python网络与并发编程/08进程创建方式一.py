@@ -1,8 +1,22 @@
 # 创建多个进程演示并行效果
 # 实例化进程类：Process
 
-from multiprocessing import Process
 import time
+from multiprocessing import Process
+
+
+# 吃饭进程
+def eating() -> None:
+    for i in range(5):
+        print(f' 吃饭.....')
+        time.sleep(1)  # 休眠1秒
+
+
+# 工作进程
+def working() -> None:
+    for i in range(5):
+        print(f' 学习.....')
+        time.sleep(1)  # 休眠1秒
 
 
 # 测试代码
